@@ -23,7 +23,7 @@ export class QuizService {
       }
       , {
         name: 'Quiz 2'
-        , qeustions: []
+        , questions: []
       }
     ];
 
