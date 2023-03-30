@@ -1,7 +1,10 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-      <button class="btn btn-outline-success mt-3 mb-3">
+      <button
+        class="btn btn-outline-success mt-3 mb-3"
+        (click)="openAddNewQuizForm()"
+      >
         Add New Quiz
       </button>
       <div class="card">
@@ -22,7 +25,9 @@
     </div>
     <div
       class="col-md-8"
-      *ngIf="selectedQuiz != undefined"
+      *ngIf="selectedQuiz != undefined &&
+        !addNewQuizFormOpened &&
+        !updateQuizFormOpened"
     >
       <div class="mt-3 mb-3">
         <button class="btn btn-outline-dark">
@@ -35,17 +40,26 @@
       <div class="card">
         <div class="card-header">
           General
+          <button
+            class="btn btn-outline-primary"
+            (click)="updateQuizForm()"
+          >
+            Edit Name
+          </button>
         </div>
         <div class="card-body">
           {{ selectedQuiz.quizName}}
         </div>
       </div>
-      <div class="card mt-3">
+      <div
+        class="card mt-3"
+        *ngFor="let q of selectedQuiz.quizQuestions"
+      >
         <div class="card-header">
           Question
         </div>
         <div class="card-body">
-          Coming Soon
+          {{ q.questionName }}
         </div>
       </div>
       <div class="card mt-3">
@@ -57,7 +71,11 @@
         </div>
       </div>
     </div>
-    <div class="col-md-8 mt-3" *ngIf="selectedQuiz === undefined">
+    <div
+      class="col-md-8 mt-3"
+      *ngIf="selectedQuiz === undefined &&
+        !addNewQuizFormOpened &&
+        !updateQuizFormOpened">
       <div class="card bg-light text-center">
         <h2>
           No Quiz Selected
@@ -65,6 +83,66 @@
         <p>
           Select or add a new quiz
         </p>
+      </div>
+    </div>
+    <div
+      class="col-md-8 mt-3"
+      *ngIf="selectedQuiz === undefined &&
+        addNewQuizFormOpened &&
+        !updateQuizFormOpened"
+    >
+      <div class="card bg-light text-center">
+        <div class="form-group p-3">
+          <label for="quizName">Enter Quiz Name:</label>
+          <input
+            type="text"
+            name="quizName"
+            id="quizName"
+            class="form-control mb-3"
+            placeholder="Enter Quiz name..."
+            [(ngModel)]="newQuizName"
+          >
+          <label for="quizQuestion">Enter a Question:</label>
+          <input
+            type="text"
+            name="quizQuestion"
+            id="quizQuestion"
+            class="form-control mb-3"
+            placeholder="Enter Quiz name..."
+            [(ngModel)]="newQuizQuestion"
+          >
+          <button
+            class="btn btn-outline-success"
+            (click)="addNewForm()"
+          >
+            Add New Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+    class="col-md-8 mt-3"
+    *ngIf="selectedQuiz !== undefined &&
+        updateQuizFormOpened &&
+        !addNewQuizFormOpened"
+  >
+    <div class="card bg-light text-center">
+      <div class="form-group p-3">
+        <label for="newQuizName">Enter New Quiz Name:</label>
+        <input
+          type="text"
+          name="newQuizName"
+          id="newQuizName"
+          class="form-control mb-3"
+          placeholder="Enter New Quiz name..."
+          [(ngModel)]="newQuizNameUpdated"
+        >
+        <button
+          class="btn btn-outline-success"
+          (click)="updateQuiz(selectedQuiz)"
+        >
+          Update Quiz Name
+        </button>
       </div>
     </div>
   </div>

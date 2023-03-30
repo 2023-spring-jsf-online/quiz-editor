@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      const quizzes = this. quizSvc.loadQuizzes();
+      const quizzes = this.quizSvc.loadQuizzes();
       console.log(quizzes);
 
       this.quizzes =  quizzes.map(x => ({
@@ -44,6 +44,46 @@ export class AppComponent implements OnInit {
 
   selectQuiz = (q: QuizDisplay) => {
     this.selectedQuiz = q;
+    this.addNewQuizFormOpened = false;
+    this.updateQuizFormOpened = false;
     console.log(this.selectedQuiz);
+  }
+
+  addNewQuizFormOpened = false;
+
+  openAddNewQuizForm = () => {
+    this.selectedQuiz = undefined;
+    this.addNewQuizFormOpened = true;
+    this.updateQuizFormOpened = false;
+  }
+
+  newQuizName = "";
+  newQuizQuestion = "";
+
+  addNewForm = () => {
+    this.quizzes.push({
+      quizName: this.newQuizName,
+      quizQuestions: [
+        {questionName: this.newQuizQuestion}
+      ]
+    })
+    console.log(this.quizzes);
+    this.addNewQuizFormOpened = false;
+  }
+
+  updateQuizFormOpened = false;
+
+  updateQuizForm = () => {
+    this.addNewQuizFormOpened = false;
+    this.updateQuizFormOpened = true;
+  }
+
+  newQuizNameUpdated = "";
+
+  updateQuiz = (selectedQuiz: QuizDisplay) => {
+    let index = this.quizzes.indexOf(selectedQuiz);
+
+    this.quizzes[index].quizName = this.newQuizNameUpdated;
+    this.updateQuizFormOpened = false;
   }
 }
