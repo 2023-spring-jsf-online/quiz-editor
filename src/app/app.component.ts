@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { QuizService } from './quiz.service';
+import { QuizFromWeb, QuizService } from './quiz.service';
 
 interface QuizDisplay {
   quizName: string;
@@ -8,6 +8,7 @@ interface QuizDisplay {
   newlyAddedQuiz: boolean;
   naiveQuizChecksum: string;
 }
+
 
 interface QuestionDisplay {
   questionName: string;
@@ -181,5 +182,17 @@ export class AppComponent implements OnInit {
 
   get addedQuizCount() {
     return this.getAddedQuizzes().length;
+  }
+
+  getEditedQuizzes = () => {
+    return this.quizzes.filter(x =>
+      x.quizName + x.quizQuestions.map(y => '~' + y.questionName).join('') !== x.naiveQuizChecksum
+      && !x.newlyAddedQuiz 
+      && !x.markedForDelete
+    );
+  };
+
+  get editedQuizCount() {
+    return this.getEditedQuizzes().length;
   }
 }
