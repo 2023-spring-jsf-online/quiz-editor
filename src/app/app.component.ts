@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
   }
 
   errorLoadingQuizzes = false;
+  loadingQuizzes = true;
 
   loadQuizzesFromCloud = async () => {
 
@@ -38,11 +39,14 @@ export class AppComponent implements OnInit {
           questionName: y.name
         }))
         , markedForDelete: false
-      }));      
+      }));
+
+      this.loadingQuizzes = false;
     }
     catch (err) {
       console.error(err);
-      this.errorLoadingQuizzes = true;      
+      this.errorLoadingQuizzes = true;
+      this.loadingQuizzes = false;
     }
   };
 
@@ -76,7 +80,7 @@ export class AppComponent implements OnInit {
   };
 
   addNewQuestion = () => {
-    
+
     if (this.selectedQuiz) {
       this.selectedQuiz.quizQuestions = [
         ...this.selectedQuiz.quizQuestions
@@ -96,7 +100,7 @@ export class AppComponent implements OnInit {
 
   jsPromisesOne = () => {
     const n = this.quizSvc.getMagicNumber(true);
-    console.log(n); // ? ? ? 
+    console.log(n); // ? ? ?
 
     n.then(
       number => {
@@ -104,7 +108,7 @@ export class AppComponent implements OnInit {
 
         const n2 = this.quizSvc.getMagicNumber(true);
         console.log(n2); // ? ? ?
-        
+
         n2.then(x => console.log(x)).catch(e => console.error(e));
       }
     ).catch(
@@ -123,7 +127,7 @@ export class AppComponent implements OnInit {
       const y = await this.quizSvc.getMagicNumber(true);
       console.log(y); // ? ? ?
     }
-    
+
     catch (err) {
       console.error(err);
     }
@@ -142,7 +146,7 @@ export class AppComponent implements OnInit {
       // const results = await Promise.race([x, y]);
       console.log(results); // ? ? ?
     }
-    
+
     catch (err) {
       console.error(err);
     }
