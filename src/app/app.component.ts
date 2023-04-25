@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { QuizService, QuizFromWeb } from './quiz.service';
 
+import {
+  trigger,
+  transition,
+  animate,
+  keyframes,
+  style
+}  from '@angular/animations';
+
 interface QuizDisplay {
   quizName: string;
   quizQuestions: QuestionDisplay[];
@@ -16,7 +24,29 @@ interface QuestionDisplay {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [
+    trigger('detailsFromLeft', [
+      transition('leftPosition => finalPosition', [
+        animate('300ms', keyframes([
+          style({ marginLeft: '-30px', offset: 0.0 }),
+          style({ marginLeft: '-20px', offset: 0.25 }),
+          style({ marginLeft: '-10px', offset: 0.5 }),
+          style({ marginLeft: '-5px', offset: 0.75 }),
+          style({ marginLeft: '0px', offset: 1.0 })
+        ]))
+      ]),
+    ]),
+    trigger('pulseSaveCancelButtons', [
+      transition('nothingToSave => somethingToSave', [
+        animate('400ms', keyframes([
+          style({ transform: 'scale(1.0)', 'transform-origin': 'top left', offset: 0.0 }),
+          style({ transform: 'scale(1.2)', 'transform-origin': 'top left', offset: 0.5 }),
+          style({ transform: 'scale(1.0)', 'transform-origin': 'top left', offset: 1.0 })
+        ]))
+      ])
+    ])
+  ]
 })
 export class AppComponent implements OnInit {
   title = 'quiz-editor';
@@ -47,14 +77,14 @@ export class AppComponent implements OnInit {
         , markedForDelete: false
         , newlyAddedQuiz: false
         , naiveQuizChecksum: this.generateNaiveQuizChecksum(x)
-      }));      
+      }));
 
       this.loading = false;
     }
     catch (err) {
       console.error(err);
       this.errorLoadingQuizzes = true;
-      this.loading = false;      
+      this.loading = false;
     }
   };
 
@@ -69,6 +99,7 @@ export class AppComponent implements OnInit {
   selectQuiz = (q: QuizDisplay) => {
     this.selectedQuiz = q;
     console.log(this.selectedQuiz);
+    this.detailsFromLeftAnimationState = "finalPosition";
   };
 
   addNewQuiz = () => {
@@ -90,7 +121,7 @@ export class AppComponent implements OnInit {
   };
 
   addNewQuestion = () => {
-    
+
     if (this.selectedQuiz) {
       this.selectedQuiz.quizQuestions = [
         ...this.selectedQuiz.quizQuestions
@@ -110,7 +141,7 @@ export class AppComponent implements OnInit {
 
   jsPromisesOne = () => {
     const n = this.quizSvc.getMagicNumber(true);
-    console.log(n); // ? ? ? 
+    console.log(n); // ? ? ?
 
     n.then(
       number => {
@@ -118,7 +149,7 @@ export class AppComponent implements OnInit {
 
         const n2 = this.quizSvc.getMagicNumber(true);
         console.log(n2); // ? ? ?
-        
+
         n2.then(x => console.log(x)).catch(e => console.error(e));
       }
     ).catch(
@@ -137,7 +168,7 @@ export class AppComponent implements OnInit {
       const y = await this.quizSvc.getMagicNumber(true);
       console.log(y); // ? ? ?
     }
-    
+
     catch (err) {
       console.error(err);
     }
@@ -156,7 +187,7 @@ export class AppComponent implements OnInit {
       // const results = await Promise.race([x, y]);
       console.log(results); // ? ? ?
     }
-    
+
     catch (err) {
       console.error(err);
     }
@@ -182,16 +213,22 @@ export class AppComponent implements OnInit {
   get addedQuizCount() {
     return this.getAddedQuizzes().length;
   }
-  
+
   getEditedQuizzes = () => {
-    return this.quizzes.filter(x => 
+    return this.quizzes.filter(x =>
       x.quizName + x.quizQuestions.map(y => '~' + y.questionName).join('') !== x.naiveQuizChecksum
-      && !x.newlyAddedQuiz 
+      && !x.newlyAddedQuiz
       && !x.markedForDelete
     );
   };
 
   get editedQuizCount() {
     return this.getEditedQuizzes().length;
+  }
+
+  detailsFromLeftAnimationState = "leftPosition";
+
+  detailsFromLeftAnimationDone = () => {
+    this.detailsFromLeftAnimationState = "leftPosition";
   }
 }
