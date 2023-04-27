@@ -237,8 +237,7 @@ export class AppComponent implements OnInit {
   saveQuizzes = async () => {
     try {
 
-      const newQuizzes: ShapeForSavingNewQuizzes[] = [];
-       this.getAddedQuizzes().map(x => ({
+      const newQuizzes: ShapeForSavingNewQuizzes[] = this.getAddedQuizzes().map(x => ({
          quizName: x.quizName,
          quizQuestions: x.quizQuestions.map(y => 
          y.questionName)
