@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { QuizService, QuizFromWeb, ShapeForSavingNewQuizzes, ShapeForSavingEditedQuizzes } from './quiz.service';
-
-import {
+import { 
   trigger
+  , keyframes
   , transition
   , animate
-  , keyframes
   , style
-} from '@angular/animations';
+ } from '@angular/animations'
 
 interface QuizDisplay {
   quizName: string;
@@ -18,6 +17,7 @@ interface QuizDisplay {
 }
 
 interface QuestionDisplay {
+  quizName: any;
   questionName: string;
 }
 
@@ -46,7 +46,7 @@ interface QuestionDisplay {
         ]))
       ])
     ])
-  ]  
+  ]
 })
 export class AppComponent implements OnInit {
   title = 'quiz-editor';
@@ -72,6 +72,7 @@ export class AppComponent implements OnInit {
       this.quizzes = quizzes.map(x => ({
         quizName: x.name
         , quizQuestions: x.questions.map(y => ({
+          quizName: y.name,
           questionName: y.name
         }))
         , markedForDelete: false
@@ -126,6 +127,7 @@ export class AppComponent implements OnInit {
       this.selectedQuiz.quizQuestions = [
         ...this.selectedQuiz.quizQuestions
         , {
+          quizName: "",
           questionName: "Untitled Question"
         }
       ];
@@ -235,25 +237,30 @@ export class AppComponent implements OnInit {
   saveQuizzes = async () => {
     try {
 
-        const newQuizzes: ShapeForSavingNewQuizzes[] = [];
+      const newQuizzes: ShapeForSavingNewQuizzes[] = [];
+       this.getAddedQuizzes().map(x => ({
+         quizName: x.quizName,
+         quizQuestions: x.quizQuestions.map(y => 
+         y.questionName)
+      }));
 
-        const editedQuizzes: ShapeForSavingEditedQuizzes[] = this.getEditedQuizzes().map(x => ({
-          quiz: x.quizName
-          , questions: x.quizQuestions.map(y => ({
-            question: y.questionName
-          }))
-        }));
+      const editedQuizzes: ShapeForSavingEditedQuizzes[] = this.getEditedQuizzes().map(x => ({
+        quiz: x.quizName
+        , questions: x.quizQuestions.map(y => ({
+          question: y.questionName
+        }))
+      }));
 
-        const numberOfUpdatedQuizzes = await this.quizSvc.saveQuizzes(
-          editedQuizzes
-          , newQuizzes
-        );
+      const numberOfUpdatedQuizzes = await this.quizSvc.saveQuizzes(
+        editedQuizzes
+        , newQuizzes
+      );
 
-        console.log("numberOfUpdatedQuizzes", numberOfUpdatedQuizzes);
+      console.log("numberOfUpdatedQuizzes", numberOfUpdatedQuizzes)
     }
 
     catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  } 
 }
