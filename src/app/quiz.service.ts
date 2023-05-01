@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from "rxjs";
 
 interface QuizFromWeb {
   name: string;
@@ -12,28 +14,38 @@ interface QuizFromWeb {
 })
 export class QuizService {
 
-  constructor() { }
+  constructor(
+    private angularHttpClient: HttpClient
+  ) { }
 
   loadQuizzes = () => {
 
-    const quizzesFromWeb: QuizFromWeb[] = [
-      {
-        name: 'Quiz 1'
-        , questions: [
-          {
-            name: 'Question 1'
-          }
-          , {
-            name: 'Question 2'
-          }
-        ]
-      }
-      , {
-        name: 'Quiz 2'
-        , questions: []
-      }
-    ];
+    const quizzesFromWeb = lastValueFrom(this.angularHttpClient.get<QuizFromWeb[]>(
+      "https://modern-js.azurewebsites.net/api/HttpTriggerJS1?code=8XD3vN3ehHLdZacBQJQhgUnNst9202gdd5VM3kWCytDkz2nXhia6kA==&name=Mystery%20Quiz"
+      )
+    );
 
     return quizzesFromWeb;
   };
+
+  getMagicNumber = (callerWantsToSucced: boolean): Promise<number> => {
+    return new Promise<number>(
+      (resolve, reject) => {
+
+        //
+        // Stuff
+        //
+
+        // Resolve if succesful
+        if (callerWantsToSucced) {
+          resolve(42);
+        }
+        else {
+          reject("Error");
+        }
+      
+      }
+    );
+  };
+
 }
