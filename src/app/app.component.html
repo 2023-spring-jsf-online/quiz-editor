@@ -57,6 +57,12 @@
         <button class="btn btn-outline-dark">
           Save
           <span
+            class="badge bg-light text-dark ms-1"
+            *ngIf="editedQuizCount > 0"
+          >
+            *{{ editedQuizCount }}
+          </span>
+          <span
             class="badge bg-danger ms-1"
             *ngIf="deletedQuizCount > 0"
           >
