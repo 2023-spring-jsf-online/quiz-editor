@@ -55,7 +55,8 @@
     >
       <div class="mt-3 mb-3">
         <button class="btn btn-outline-dark">
-          Save <span class="badge bg-danger" *ngIf="deletedQuizCount > 0">-{{ deletedQuizCount }}</span>
+          Save <span class="badge bg-danger ms-1" *ngIf="deletedQuizCount > 0">-{{ deletedQuizCount }}</span>
+          <span class="badge bg-success ms-1" *ngIf="addedQuizCount > 0">+{{ addedQuizCount }}</span>
         </button>
         <button class="btn btn-link" (click)="cancelAllChanges()">
           Cancel all changes
